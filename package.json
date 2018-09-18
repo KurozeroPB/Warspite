@@ -1,0 +1,15 @@
+{
+  "name": "warspite",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "eris": "^0.9.0",
+    "fast-html-parser": "^1.0.1",
+    "jsdom": "^11.12.0",
+    "parse5": "^5.1.0",
+    "toml": "^2.3.3"
+  }
+}
