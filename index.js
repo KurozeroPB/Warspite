@@ -95,6 +95,7 @@ process.on('unhandledRejection', (e) => console.error(e));
 
 process.on('SIGINT', () => {
     client.disconnect({ reconnect: false });
+    process.exit(0);
     setTimeout(() =>  process.exit(0) , 5000);
 });
 
