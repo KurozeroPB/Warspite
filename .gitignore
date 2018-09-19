@@ -60,3 +60,5 @@ settings.toml
 
 # next.js build output
 .next
+
+test.js

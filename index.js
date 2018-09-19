@@ -28,12 +28,25 @@ client.registerCommand('ship', async (msg, args) => {
     // Ship names need to be capitalized for the url
     args.forEach((str, i) => args[i] = str.capitalize());
 
-    // Get the ship's html page and parse the data
-    const { data } = await axios.get(`https://azurlane.koumakan.jp/${args.join('_')}`);
-    const $ = cheerio.load(data);
+    // Request the ship's html page
+    let resp = null;
+    try {
+        resp = await axios.get(`https://azurlane.koumakan.jp/${args.join('_')}`);
+    } catch (e) {
+        console.error(e);
+    }
+
+    // Parse the html page and get the data
+    const $ = cheerio.load(resp.data);
     const image = 'https://azurlane.koumakan.jp' + $('.image img')[0].attribs.src;
-    const buildTime = $('tbody tr td')[0].children[0].data;
-    const stars = $('tbody tr td')[1].children[0].next.data;
+    const shipdata = $('tbody tr td');
+    const name = $('.mw-parser-output span')[0].children[0].data;
+    const buildTime = shipdata[0].children[0].data;
+    const stars = shipdata[1].children[0].next.data;
+    const shipClass = shipdata[2].children[0].children[0].data;
+    const shipID = shipdata[3].children[0].data;
+    const nationality = shipdata[4].children[0].next.next.children[0].data;
+    const hullType = shipdata[5].children[0].next.next.next.children[0].data;
 
     // Check which rarity it is and use the appropriate string
     let rarity = '';
@@ -48,25 +61,42 @@ client.registerCommand('ship', async (msg, args) => {
         rarity = 'Rare';
 
     // Send the embed to Discord with the data
-    await msg.channel.createMessage({
-        embed: {
-            title: args.join(' '),
-            color: 0xE576AA,
-            thumbnail: { url: image },
-            fields: [
-                { name: "Build time", value: buildTime.replace('\n', '').replace('(', ''), inline: true },
-                { name: "Rarity", value: rarity, inline: true },
-                { name: "Stars", value: stars.replace('\n', '') }
-            ],
-            footer: { text: 'Version: ' + settings.version }
-        }
-    });
+    try {
+        await msg.channel.createMessage({
+            embed: {
+                title: name,
+                color: 0xE576AA,
+                thumbnail: { url: image },
+                fields: [
+                    { name: "Build time", value: buildTime.replace('\n', '').replace('(', ''), inline: true },
+                    { name: "Rarity", value: rarity, inline: true },
+                    { name: "Stars", value: stars.replace('\n', ''), inline: true },
+                    { name: 'Class', value: shipClass, inline: true },
+                    { name: 'Nationality', value: nationality, inline: true },
+                    { name: 'Hull type', value: hullType, inline: true }
+                ],
+                footer: { text: `Version: ${settings.version}, ID: ${shipID.replace('\n', '')}` }
+            }
+        });
+    } catch (e) {
+        console.error(e);
+    }
 }, {
     description: 'Get info about a certain ship'
 });
 
-// Log on ready
+// Log important events
 client.on('ready', () => console.log('Ready!'));
+client.on('error', (e, _id) => console.error(e));
+client.on('warn', (msg, _id) => console.warn(msg));
+
+process.on('uncaughtException', (e) => console.error(e));
+process.on('unhandledRejection', (e) => console.error(e));
+
+process.on('SIGINT', () => {
+    client.disconnect({ reconnect: false });
+    setTimeout(() =>  process.exit(0) , 5000);
+});
 
 // Connect to the Discord websocket
-client.connect();
+client.connect().catch(console.error);
