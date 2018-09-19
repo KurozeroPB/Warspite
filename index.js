@@ -6,6 +6,7 @@ const fs = require('fs');
 require('./utils');
 
 const settings = toml.parse(fs.readFileSync('./settings.toml'));
+const baseUrl = 'https://azurlane.koumakan.jp';
 
 // Create the main client
 const client = new Eris.CommandClient(settings.token, {
@@ -31,14 +32,14 @@ client.registerCommand('ship', async (msg, args) => {
     // Request the ship's html page
     let resp = {};
     try {
-        resp = await axios.get('https://azurlane.koumakan.jp/' + args.join('_'));
+        resp = await axios.get(baseUrl + '/' + args.join('_'));
     } catch (e) {
         console.error(e);
     }
 
     // Parse the html page and get the data
     const $ = cheerio.load(resp.data);
-    const image = 'https://azurlane.koumakan.jp' + $('.image img')[0].attribs.src;
+    const image = baseUrl + $('.image img')[0].attribs.src;
     const shipdata = $('tbody tr td');
     const name = $('.mw-parser-output span')[0].children[0].data;
 
