@@ -21,6 +21,7 @@ const client = new Eris.CommandClient(settings.token, {
 });
 
 // Register a new command called 'ship'
+// ['ship', 'boat', 'shipgirl', 'shipinfo', 'info']
 client.registerCommand('ship', async (msg, args) => {
     // Return if no ship names were given
     if (args.length === 0)
@@ -43,7 +44,7 @@ client.registerCommand('ship', async (msg, args) => {
     const shipdata = $('tbody tr td');
     const name = $('.mw-parser-output span')[0].children[0].data;
 
-    let buildTime = shipdata[0].children[0].data.replace('\n', '');
+    let buildTime = shipdata[0].children[0].children[0].data.replace('\n', '');
     if (buildTime.charAt(buildTime.length - 1) === '(')
         buildTime = buildTime.slice(0, -1);
 
