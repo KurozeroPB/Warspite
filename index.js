@@ -21,7 +21,6 @@ const client = new Eris.CommandClient(settings.token, {
 });
 
 // Register a new command called 'ship'
-// ['ship', 'boat', 'shipgirl', 'shipinfo', 'info']
 client.registerCommand('ship', async (msg, args) => {
     // Return if no ship names were given
     if (args.length === 0)
@@ -35,7 +34,7 @@ client.registerCommand('ship', async (msg, args) => {
     try {
         resp = await axios.get(baseUrl + '/' + args.join('_'));
     } catch (e) {
-        console.error(e);
+        return await msg.channel.createMessage(`Commander, there is no ship called **${args.join(' ')}**...`);
     }
 
     // Parse the html page and get the data
@@ -65,30 +64,37 @@ client.registerCommand('ship', async (msg, args) => {
         rarity = 'Super Rare';
     else if (str.indexOf('rare') !== -1)
         rarity = 'Rare';
+    else if (str.indexOf('legendary') !== -1)
+        rarity = 'Legendary';
 
     // Send the embed to Discord with the data
-    try {
-        await msg.channel.createMessage({
-            embed: {
-                title: name,
-                color: 0xE576AA,
-                thumbnail: { url: image },
-                fields: [
-                    { name: 'Build time', value: buildTime, inline: true },
-                    { name: 'Rarity', value: rarity, inline: true },
-                    { name: 'Stars', value: stars.replace('\n', ''), inline: true },
-                    { name: 'Class', value: shipClass, inline: true },
-                    { name: 'Nationality', value: nationality, inline: true },
-                    { name: 'Hull type', value: hullType, inline: true }
-                ],
-                footer: { text: `Version: ${settings.version}, ID: ${shipID.replace('\n', '')}` }
-            }
-        });
-    } catch (e) {
-        console.error(e);
-    }
+    await msg.channel.createMessage({
+        embed: {
+            title: name,
+            color: 0xE576AA,
+            thumbnail: { url: image },
+            fields: [
+                { name: 'Build time', value: buildTime, inline: true },
+                { name: 'Rarity', value: rarity, inline: true },
+                { name: 'Stars', value: stars.replace('\n', ''), inline: true },
+                { name: 'Class', value: shipClass, inline: true },
+                { name: 'Nationality', value: nationality, inline: true },
+                { name: 'Hull type', value: hullType, inline: true }
+            ],
+            footer: { text: `Version: ${settings.version}, ID: ${shipID.replace('\n', '')}` }
+        }
+    });
 }, {
-    description: 'Get info about a certain ship'
+    aliases: [ 'boat', 'shipgirl', 'shipinfo', 'info' ],
+    argsRequired: true,
+    cooldown: 5000,
+    cooldownExclusions: { userIDs: [ '93973697643155456' ] },
+    cooldownMessage: 'Please calm down commander, you\'re currently on cooldown',
+    cooldownReturns: 1,
+    description: 'Get info about a certain ship',
+    fullDescription: 'Get some usefull information about the given ship as argument',
+    invalidUsageMessage: 'Commander you\'re doing it wrong! Please use `w!help ship` to see how to use this command',
+    usage: '<shipgirl_name> |> `w!ship warspite`'
 });
 
 // Log important events
