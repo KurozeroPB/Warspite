@@ -20,7 +20,6 @@ const client = new Eris.CommandClient(settings.token, {
     owner: 'Kurozero#0001',
     prefix: 'w!',
     defaultCommandOptions: {
-        argsRequired: true,
         cooldown: 5000,
         cooldownExclusions: { userIDs: [ '93973697643155456' ] },
         cooldownMessage: 'Please calm down commander, you\'re currently on cooldown',
@@ -96,6 +95,7 @@ client.registerCommand('ship', async (msg, args) => {
     });
 }, {
     aliases: [ 'boat', 'shipgirl', 'shipinfo', 'info' ],
+    argsRequired: true,
     description: 'Get info about a certain ship',
     fullDescription: 'Get some usefull information about the given ship as argument',
     usage: '<shipgirl_name> |> `w!ship warspite`'
@@ -132,6 +132,7 @@ client.registerCommand('build', async (msg, args) => {
     await msg.channel.createMessage(`All ships for the construction time **${result.time}**:\n` + result.ships.join(', '));
 }, {
     aliases: [ 'times', 'time', 'construction' ],
+    argsRequired: true,
     description: 'Get the ships for a certain construction time',
     fullDescription: 'Get the ships for a certain construction time',
     usage: '<construction_time> |> `w!build 00:23:00`'
