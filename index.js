@@ -7,6 +7,7 @@ require('./utils');
 
 const settings = toml.parse(fs.readFileSync('./settings.toml'));
 const baseUrl = 'https://azurlane.koumakan.jp';
+const fullBaseUrl = 'https://azurlane.koumakan.jp/';
 
 // Create the main client
 const client = new Eris.CommandClient(settings.token, {
@@ -40,7 +41,7 @@ client.registerCommand('ship', async (msg, args) => {
     // Request the ship's html page
     let resp = {};
     try {
-        resp = await axios.get(baseUrl + '/' + args.join('_'));
+        resp = await axios.get(fullBaseUrl + args.join('_'));
     } catch (e) {
         return await msg.channel.createMessage(`Commander, there is no ship called **${args.join(' ')}**...`);
     }
@@ -79,7 +80,7 @@ client.registerCommand('ship', async (msg, args) => {
     await msg.channel.createMessage({
         embed: {
             title: name,
-            url: 'https://azurlane.koumakan.jp/' + args.join('_'),
+            url: fullBaseUrl + args.join('_'),
             color: 0xE576AA,
             thumbnail: { url: image },
             fields: [
@@ -105,7 +106,7 @@ client.registerCommand('build', async (msg, args) => {
 
     let resp = {};
     try {
-        resp = await axios.get(`https://azurlane.koumakan.jp/Building`);
+        resp = await axios.get(baseUrl + '/Building');
     } catch {
         return await msg.channel.createMessage(`Commander, it seems like I ran into an error, please try again later.`);
     }
