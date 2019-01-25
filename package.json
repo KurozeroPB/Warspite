@@ -4,7 +4,9 @@
     "main": "index.js",
     "scripts": {
         "start": "set NODE_ENV=production pm2 start index.js --name Warspite -- --color",
-        "test": "node index.js"
+        "test": "node index.js",
+        "lint": "eslint --ext .js --ignore-path .gitignore .",
+        "fix": "eslint --ext .js --ignore-path .gitignore . --fix"
     },
     "repository": "https://github.com/KurozeroPB/Warspite",
     "author": "KurozeroPB",
@@ -13,6 +15,11 @@
         "axios": "^0.18.0",
         "cheerio": "^1.0.0-rc.2",
         "eris": "^0.9.0",
-        "toml": "^2.3.3"
+        "rss-feed-emitter": "^2.0.1",
+        "toml": "^2.3.3",
+        "turndown": "^5.0.3"
+    },
+    "devDependencies": {
+        "eslint": "^5.12.1"
     }
 }
