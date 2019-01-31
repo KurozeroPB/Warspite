@@ -3,27 +3,14 @@ const cheerio = require("cheerio");
 const axios = require("axios");
 const toml = require("toml");
 const fs = require("fs");
-const TurndownService = require("turndown");
-const RssFeed = require("rss-feed-emitter");
 
-const { sleep, foreachAsync } = require("./utils");
+const { sleep } = require("./utils");
 require("./utils");
 
 const settings = toml.parse(fs.readFileSync("./settings.toml"));
 const baseUrl = "https://azurlane.koumakan.jp";
 const fullBaseUrl = "https://azurlane.koumakan.jp/";
 const urlRegex = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/giu;
-
-// Init rss feed
-const rss = new RssFeed();
-
-// Init turndown
-const turndown = new TurndownService({
-    headingStyle: "atx",
-    bulletListMarker: "-",
-    codeBlockStyle: "fenced",
-    emDelimiter: "*"
-});
 
 // Create the main client
 const client = new Eris.CommandClient(settings.token, {
@@ -44,16 +31,6 @@ const client = new Eris.CommandClient(settings.token, {
         cooldownReturns: 1,
         invalidUsageMessage: "Commander you're doing it wrong! Please use `w!help ship` to see how to use this command"
     }
-});
-
-rss.add({
-    url: "https://nyaa.si/?page=rss&u=HorribleSubs",
-    refresh: 10000
-});
-
-turndown.addRule("cite", {
-    filter: ["cite"],
-    replacement: (content) => `*${content}*`
 });
 
 // Register a new command called 'ship'
@@ -206,80 +183,9 @@ client.registerCommand("build", async (msg, args) => {
     usage: "<construction_time> |> `w!build 00:23:00`"
 });
 
-/* Rss feed notifs */
-
-/**
- * Executes the horriblesubs webhook
- * @param {Object} item
- * @return {Promise<void>}
- */
-const horriblesubs = async (item) => {
-    try {
-        let newDesc = turndown.turndown(item.description);
-        newDesc = newDesc.split("|");
-        const descPart1 = newDesc[0];
-        const descPart2 = newDesc[1];
-        newDesc.splice(0, 2);
-        newDesc = newDesc.join("\n");
-
-        await client.executeWebhook(settings.webhook.id, settings.webhook.token, {
-            username: client.user.username,
-            avatarURL: client.user.dynamicAvatarURL("png", 512),
-            embeds: [
-                {
-                    title: item.title,
-                    url: item.guid,
-                    description: `${descPart1}|${descPart2}\n${newDesc}`,
-                    color: 0xfeffff,
-                    fields: [
-                        {
-                            name: "Seeders",
-                            value: item["nyaa:seeders"]["#"],
-                            inline: true
-                        },
-                        {
-                            name: "Leechers",
-                            value: item["nyaa:leechers"]["#"],
-                            inline: true
-                        },
-                        {
-                            name: "Downloads",
-                            value: item["nyaa:downloads"]["#"],
-                            inline: true
-                        }
-                    ],
-                    timestamp: item.date
-                }
-            ]
-        });
-    } catch (e) {
-        console.error(e);
-    }
-};
-
-// Log important events
-rss.on("error", console.error);
 client.on("error", console.error);
 client.on("warn", console.warn);
-client.on("ready", () => {
-    rss.on("new-item", async (item) => {
-        // if (process.uptime() < settings.webhook.startDelay)
-        //     return;
-
-        let active = false;
-        await foreachAsync(settings.webhook.airing, async (title) => {
-            if (item.title.indexOf(title) !== -1) {
-                active = true;
-            }
-        });
-
-        if (item.title.indexOf("1080p") !== -1 && active) {
-            await horriblesubs(item);
-            active = false;
-        }
-    });
-    console.log("Ready!");
-});
+client.on("ready", () => console.log("Ready!"));
 
 /* Specific for my own guild */
 client.on("guildMemberAdd", async (guild, member) => {
@@ -306,10 +212,7 @@ process.on("uncaughtException", (e) => console.error(e));
 process.on("unhandledRejection", (e) => console.error(e));
 
 process.on("SIGINT", () => {
-    client.disconnect({
-        reconnect: false
-    });
-    rss.destroy();
+    client.disconnect({ reconnect: false });
     process.exit(0);
     setTimeout(() => process.exit(0), 5000);
 });
