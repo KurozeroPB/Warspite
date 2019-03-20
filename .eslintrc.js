@@ -10,13 +10,13 @@ module.exports = {
     },
     "rules": {
         "accessor-pairs": "error",
-        "array-bracket-newline": "error",
+        "array-bracket-newline": "off",
         "array-bracket-spacing": [
             "error",
             "never"
         ],
         "array-callback-return": "error",
-        "array-element-newline": "error",
+        "array-element-newline": "off",
         "arrow-body-style": "error",
         "arrow-parens": [
             "error",
@@ -56,7 +56,10 @@ module.exports = {
             "error",
             "last"
         ],
-        "complexity": "error",
+        "complexity": [
+            "error",
+            30
+        ],
         "computed-property-spacing": [
             "error",
             "never"
@@ -65,7 +68,7 @@ module.exports = {
         "consistent-this": "error",
         "curly": "off",
         "default-case": "error",
-        "dot-location": "error",
+        "dot-location": "off",
         "dot-notation": [
             "error",
             {
@@ -128,14 +131,14 @@ module.exports = {
         "max-params": "off",
         "max-statements": [
             "error",
-            30
+            60
         ],
         "max-statements-per-line": "off",
         "multiline-comment-style": [
             "error",
             "separate-lines"
         ],
-        "multiline-ternary": "error",
+        "multiline-ternary": "off",
         "new-cap": "off",
         "new-parens": "error",
         "newline-after-var": "off",
@@ -192,10 +195,10 @@ module.exports = {
         "no-new-require": "error",
         "no-new-wrappers": "error",
         "no-octal-escape": "error",
-        "no-param-reassign": "error",
+        "no-param-reassign": "off",
         "no-path-concat": "error",
         "no-plusplus": "off",
-        "no-process-env": "error",
+        "no-process-env": "off",
         "no-process-exit": "off",
         "no-proto": "error",
         "no-prototype-builtins": "off",

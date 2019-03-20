@@ -11,7 +11,7 @@ String.prototype.capitalize = function() {
  * @param {Number} sleep
  * @returns {Promise<void>}
  */
-exports.sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 /**
  * Async wrapper for forEach()
@@ -19,8 +19,13 @@ exports.sleep = (ms) => new Promise((res) => setTimeout(res, ms));
  * @param {Function} cb
  * @returns {Promise<any>}
  */
-exports.foreachAsync = async (a, cb) => {
+const foreachAsync = async (a, cb) => {
     for (let index = 0; index < a.length; index++) {
         await cb(a[index], index, a);
     }
+};
+
+module.exports = {
+    sleep,
+    foreachAsync
 };

@@ -1,10 +1,10 @@
 {
     "name": "warspite",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "main": "index.js",
     "scripts": {
-        "start": "set NODE_ENV=production pm2 start index.js --name Warspite -- --color",
-        "test": "node index.js",
+        "start": "cross-env NODE_ENV=production yarn lint && node src/index.js",
+        "dev": "cross-env NODE_ENV=development node src/index.js",
         "lint": "eslint --ext .js --ignore-path .gitignore .",
         "fix": "eslint --ext .js --ignore-path .gitignore . --fix"
     },
@@ -14,9 +14,9 @@
     "dependencies": {
         "axios": "^0.18.0",
         "cheerio": "^1.0.0-rc.2",
+        "cross-env": "^5.2.0",
         "eris": "^0.9.0",
-        "rss-feed-emitter": "^2.0.1",
-        "toml": "^2.3.3",
+        "tsubaki": "^1.3.1",
         "turndown": "^5.0.3"
     },
     "devDependencies": {
