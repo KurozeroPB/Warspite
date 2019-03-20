@@ -10,7 +10,7 @@ const utils = require("./utils");
 const baseUrl = "https://azurlane.koumakan.jp";
 const urlRegex = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/giu;
 const prefix = settings.env === "production" ? settings.prefix.production : settings.prefix.development;
-const token = settings.env === "production" ? settings.tokens.productions : settings.tokens.development;
+const token = settings.env === "production" ? settings.tokens.production : settings.tokens.development;
 
 let ready = false;
 let commands = new Eris.Collection(Command);

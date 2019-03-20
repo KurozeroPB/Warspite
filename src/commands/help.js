@@ -52,7 +52,7 @@ class Help extends Command {
                     `${command.description}\n` +
                     "----------\n\n" +
                     `Aliases            ::  ${command.aliases.join(", ")}\n` +
-                    `Usage              ::  ${ctx.prefix}${command.usage}\n` +
+                    `Usage              ::  ${ctx.prefix}${command.name} ${command.usage}\n` +
                     `Guild Only         ::  ${command.guildOnly ? "yes" : "no"}\n` +
                     `Owner Only         ::  ${command.ownerOnly ? "yes" : "no"}\n` +
                     `Required Args      ::  ${command.requiredArgs}\n` +
