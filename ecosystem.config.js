@@ -1,7 +1,7 @@
 module.exports = {
     apps: [{
         name: "Warspite",
-        script: "src/warspite.js",
+        script: "build/src/warspite.js",
         instances: 1,
         autorestart: true,
         watch: false,
