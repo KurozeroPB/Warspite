@@ -44,7 +44,7 @@ export default class CommandHandler {
         }
 
         if (command.options.requiredArgs > args.length) {
-            await message.channel.createMessage(`Invalid argument count, check \`${this.settings.prefix}help ${command.name}\` to see how this command works.`);
+            await message.channel.createMessage(`Invalid argument count, check \`${this.warspite.prefix}help ${command.name}\` to see how this command works.`);
             return false;
         }
 
