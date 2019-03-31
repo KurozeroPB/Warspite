@@ -19,7 +19,7 @@ export default class Help extends Command {
     public async run(message: Message, args: string[], settings: Settings, warspite: Warspite) {
         if (args.length === 0) {
             let messageQueue: string[] = [];
-            let currentMessage = `\n# Here's a list of my commands. For more info do: ${settings.prefix}help <command>\n# Prefix: ${settings.prefix}\n`;
+            let currentMessage = `\n# Here's a list of my commands. For more info do: ${warspite.prefix}help <command>\n# Prefix: ${warspite.prefix}\n`;
             warspite.commands.forEach((command) => {
                 if (command.options.hidden === true) return; // Command is hidden
                 if (command.options.ownerOnly && message.author.id !== settings.owner) return; // Command can only be viewed by the owner
@@ -54,7 +54,7 @@ export default class Help extends Command {
                 `[${capitalize(command.name)}]\n\n` +
                 `= ${command.options.description} =\n\n` +
                 `Aliases            ::  ${command.options.aliases.join(", ")}\n` +
-                `Usage              ::  ${settings.prefix}${command.options.usage}\n` +
+                `Usage              ::  ${warspite.prefix}${command.options.usage}\n` +
                 `Guild Only         ::  ${command.options.guildOnly ? "yes" : "no"}\n` +
                 `Owner Only         ::  ${command.options.ownerOnly ? "yes" : "no"}\n` +
                 `Required Args      ::  ${command.options.requiredArgs}\n\n` +
