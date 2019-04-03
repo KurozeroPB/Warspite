@@ -1,4 +1,4 @@
-import { Message, TextChannel, GuildChannel, TextableChannel } from "eris";
+import { Message, TextChannel } from "eris";
 import { sleep } from "./utils/Helpers";
 import Warspite from "./utils/WarspiteClient";
 import CommandHandler from "./utils/CommandHandler";
