@@ -1,7 +1,7 @@
 import Command from "../utils/Command";
 import Warspite from "../utils/WarspiteClient";
 import { Settings } from "../utils/Interfaces";
-import { Message, TextChannel, PrivateChannel } from "eris";
+import { Message, PrivateChannel } from "eris";
 
 export default class Ship extends Command {
     public constructor() {

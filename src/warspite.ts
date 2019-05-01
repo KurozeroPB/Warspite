@@ -1,8 +1,8 @@
-import Eris, { Message, TextChannel } from "eris";
-import { sleep } from "./utils/Helpers";
 import Warspite from "./utils/WarspiteClient";
 import CommandHandler from "./utils/CommandHandler";
 import settings from "../settings";
+import { Message, TextChannel } from "eris";
+import { sleep } from "./utils/Helpers";
 
 let ready = false;
 
