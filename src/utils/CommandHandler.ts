@@ -1,7 +1,8 @@
 import Warspite from "./WarspiteClient";
 import { promises as fs } from "fs";
-import { Settings, HandlerOptions, Message } from "./Interfaces";
-import { GuildChannel } from "eris";
+import { Settings, HandlerOptions } from "./Interfaces";
+import { GuildChannel, Message } from "eris";
+import Command from "./Command";
 
 export default class CommandHandler {
     public settings: Settings;
@@ -9,7 +10,7 @@ export default class CommandHandler {
 
     /**
      * Command handler constructor
-     * 
+     *
      * @param {HandlerOptions} options Options for the command handler
      */
     public constructor(options: HandlerOptions) {
@@ -19,10 +20,10 @@ export default class CommandHandler {
 
     /**
      * Handle all commands
-     * 
+     *
      * @param {Message} message The message send by the user
      * @param {boolean} dm Whether the command was used in a dm
-     * 
+     *
      * @returns {Promise<boolean>} Will be true if successful else false
      */
     public async handleCommand(message: Message, dm: boolean): Promise<boolean> {
@@ -30,7 +31,7 @@ export default class CommandHandler {
         const name = parts[0].slice(this.warspite.prefix.length);
         const args = parts.splice(1);
 
-        const command = this.warspite.commands.find((cmd) => cmd.name === name || cmd.options.aliases.indexOf(name) !== -1);
+        const command = this.warspite.commands.find((cmd) => cmd.name === name || (cmd.options.aliases !== undefined && cmd.options.aliases.indexOf(name) !== -1));
         if (!command) return false; // Command doesn't exist
 
         if (command.options.guildOnly && dm) {
@@ -43,7 +44,8 @@ export default class CommandHandler {
             return false;
         }
 
-        if (command.options.requiredArgs > args.length) {
+        const requiredArgs = command.options.requiredArgs;
+        if (requiredArgs !== undefined && requiredArgs > args.length) {
             await message.channel.createMessage(`Invalid argument count, check \`${this.warspite.prefix}help ${command.name}\` to see how this command works.`);
             return false;
         }
@@ -71,21 +73,25 @@ export default class CommandHandler {
             await command.run(message, args, this.settings, this.warspite);
             return true;
         } catch (error) {
-            await message.channel.createMessage({
+            message.channel.createMessage({
+                content: "An error occured, please try again later.",
                 embed: {
                     color: 0xDC143C,
-                    description: error.toString()
+                    description: error.message ? error.message : error.toString(),
+                    footer: {
+                        text: "join the support server for more help https://discord.gg/p895czC"
+                    }
                 }
-            });
+            }).catch(() => null);
             return false;
         }
     }
 
     /**
      * Load all commands
-     * 
+     *
      * @param {string} commandDir The directory with all the commands
-     * 
+     *
      * @returns {Promise<void>}
      */
     public async loadCommands(commandDir: string): Promise<void> {
@@ -102,12 +108,12 @@ export default class CommandHandler {
     private async _add(commandPath: string): Promise<void> {
         try {
             const cmd = await import(commandPath);
-            const command = new cmd.default();
+            const command: Command = new cmd.default();
 
             if (this.warspite.commands.has(command.name)) {
                 this.warspite.logger.warn("CommandHandler", `A command with the name ${command.name} already exists and has been skipped`);
             } else {
-                this.warspite.commands.add(command);
+                this.warspite.commands.set(command.name, command);
             }
         } catch (e) {
             this.warspite.logger.warn("CommandHandler", `${commandPath} - ${e.stack ? e.stack : e.toString()}`);

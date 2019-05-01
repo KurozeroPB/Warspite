@@ -1,53 +1,52 @@
-import axios, { AxiosResponse } from "axios";
-import { Message, Settings, ErrorResponse, ShipResponse } from "../utils/Interfaces";
 import Command from "../utils/Command";
+import Warspite from "../utils/WarspiteClient";
+import { Settings } from "../utils/Interfaces";
+import { Message, TextChannel, PrivateChannel } from "eris";
 
 export default class Ship extends Command {
     public constructor() {
         super("ship", {
-            aliases: ["waifu"],
             description: "Get info about a ship",
             usage: "ship <name: string>",
-            requiredArgs: 1,
-            hidden: false,
-            ownerOnly: false,
-            guildOnly: false
+            aliases: ["waifu"],
+            requiredArgs: 1
         });
     }
 
-    public async run(message: Message, args: string[], settings: Settings) {
+    public async run(message: Message, args: string[], settings: Settings, client: Warspite) {
         const name = args.join(" ");
-
-        let response: AxiosResponse;
         try {
-            response = await axios.get(`${settings.baseUrl}/ship?name=${name}`);
-        } catch (error) {
-            const data: ErrorResponse = error.response.data;
-            if (data.statusCode === 500) {
-                return await message.channel.createMessage(data.error ? data.error : data.message);
-            } else {
-                return await message.channel.createMessage(data.message);
-            }
-        }
-
-        const data: ShipResponse = response.data;
-        return await message.channel.createMessage({
-            embed: {
-                title: data.ship.names.full || "Unkown",
-                color: settings.colors.default,
-                thumbnail: { url: data.ship.thumbnail },
-                fields: [
-                    { name: "Construction time", value: data.ship.buildTime || "Unkown", inline: true },
-                    { name: "Rarity", value: data.ship.rarity || "Unkown", inline: true },
-                    { name: "Stars", value: data.ship.stars.value || "Unkown", inline: true },
-                    { name: "Class", value: data.ship.class || "Unkown", inline: true },
-                    { name: "Nationality", value: data.ship.nationality || "Unkown", inline: true },
-                    { name: "Hull type", value: data.ship.hullType || "Unkown", inline: true }
-                ],
-                footer: {
-                    text: `Version: ${settings.version}, ID: ${data.ship.id || "Unkown"}`
+            const data = await client.azurlane.ship(name);
+            await message.channel.createMessage({
+                embed: {
+                    title: data.names.full || "Unkown",
+                    color: client.embedColor((message.channel instanceof PrivateChannel) ? undefined : message.channel.guild),
+                    thumbnail: { url: data.thumbnail },
+                    fields: [
+                        { name: "Construction time", value: data.buildTime || "Unkown", inline: true },
+                        { name: "Rarity", value: data.rarity || "Unkown", inline: true },
+                        { name: "Stars", value: data.stars.value || "Unkown", inline: true },
+                        { name: "Class", value: data.class || "Unkown", inline: true },
+                        { name: "Nationality", value: data.nationality || "Unkown", inline: true },
+                        { name: "Hull type", value: data.hullType || "Unkown", inline: true }
+                    ],
+                    footer: {
+                        text: `Version: ${settings.version}, ID: ${data.id || "Unkown"}`
+                    }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            message.channel.createMessage({
+                content: "An error occured, please try again later.",
+                embed: {
+                    color: settings.colors.error,
+                    description: error.message ? error.message : error.toString(),
+                    footer: {
+                        text: "join the support server for more help https://discord.gg/p895czC"
+                    }
+                }
+            }).catch(() => null);
+            client.logger.error("COMMAND:SHIP", error.message ? error.message : error.toString());
+        }
     }
 }

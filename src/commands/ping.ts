@@ -1,20 +1,32 @@
 import Command from "../utils/Command";
-import { Message } from "../utils/Interfaces";
+import Warspite from "../utils/WarspiteClient";
+import { Message } from "eris";
+import { Settings } from "../utils/Interfaces";
 
 export default class Ping extends Command {
     public constructor() {
         super("ping", {
-            aliases: ["pong"],
             description: "Testing the bot",
             usage: "ping",
-            requiredArgs: 0,
-            hidden: false,
-            ownerOnly: false,
-            guildOnly: false
+            aliases: ["pong"]
         })
     }
 
-    public async run(message: Message) {
-        await message.channel.createMessage("Pong!");
+    public async run(message: Message, _args: string[], settings: Settings, { logger }: Warspite) {
+        try {
+            await message.channel.createMessage("Pong!");
+        } catch (error) {
+            message.channel.createMessage({
+                content: "An error occured, please try again later.",
+                embed: {
+                    color: settings.colors.error,
+                    description: error.message ? error.message : error.toString(),
+                    footer: {
+                        text: "join the support server for more help https://discord.gg/p895czC"
+                    }
+                }
+            }).catch(() => null);
+            logger.error("COMMAND:PING", error.message ? error.message : error.toString());
+        }
     }
 }

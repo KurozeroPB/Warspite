@@ -1,6 +1,6 @@
 {
   "name": "warspite",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Get information about azur lane ships and more related to azur lane directly in discord",
   "main": "build/src/warspite.js",
   "engines": {
@@ -35,18 +35,17 @@
     "fix": "gts fix"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "azurlane": "^0.0.7",
     "bufferutil": "^4.0.1",
     "chalk": "^2.4.2",
     "cross-env": "^5.2.0",
-    "eris": "^0.9.0",
+    "eris": "abalabahaha/eris#dev",
     "erlpack": "abalabahaha/erlpack",
     "moment": "^2.24.0",
     "winston": "^3.2.1",
     "zlib-sync": "^0.1.4"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/node": "^11.12.2",
     "gts": "^0.9.0",
     "ts-node": "^8.0.3",

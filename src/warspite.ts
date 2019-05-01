@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "eris";
+import Eris, { Message, TextChannel } from "eris";
 import { sleep } from "./utils/Helpers";
 import Warspite from "./utils/WarspiteClient";
 import CommandHandler from "./utils/CommandHandler";
@@ -77,7 +77,20 @@ warspite.on("ready", async () => {
         logger.ready(`Logged in as ${warspite.user.username}`);
         logger.ready(`Loaded [${warspite.commands.size}] commands`);
 
+        warspite.editStatus("online", { name: "Azur Lane", type: 0 });
+
         ready = true;
+    }
+});
+
+/**
+ * Sometimes when a shard goes down for a moment and comes back up is loses it's status
+ * so we re-add it here
+ */
+warspite.on("shardResume", (id: number) => {
+    const shard = warspite.shards.get(id);
+    if (shard) {
+        shard.editStatus("online", { name: "Azur Lane", type: 0 });
     }
 });
 

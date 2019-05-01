@@ -12,15 +12,9 @@
         "resolveJsonModule": true,
         "declaration": false,
         "outDir": "build",
-        "paths": {
-            "*": [
-                "node_modules/*"
-            ]
-        }
-    },
-    "include": [
-        "src/**/*",
-        "./*.ts"
-    ]
+        "typeRoots": [
+            "src/@types"
+        ]
+    }
 }
 
