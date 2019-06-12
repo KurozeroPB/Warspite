@@ -1,5 +1,5 @@
 import Command from "../utils/Command";
-import Warspite from "../utils/WarspiteClient";
+import GrafSpee from "../utils/GrafSpeeClient";
 import { Message } from "eris";
 import { Settings } from "../utils/Interfaces";
 
@@ -14,7 +14,7 @@ export default class Eval extends Command {
         });
     }
 
-    public async run(message: Message, _args: string[], settings: Settings, { logger, prefix }: Warspite) {
+    public async run(message: Message, _args: string[], settings: Settings, { logger, prefix }: GrafSpee) {
         try {
             logger.info("EVAL", `${message.author.username}: ${message.content}`);
 

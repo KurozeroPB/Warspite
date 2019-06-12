@@ -1,4 +1,4 @@
-import Warspite from "./WarspiteClient";
+import GrafSpee from "./GrafSpeeClient";
 import { Message } from "eris";
 import { Settings, CommandOptions } from "./Interfaces";
 
@@ -19,5 +19,5 @@ export default abstract class Command {
         this.options = options;
     };
 
-    public abstract async run(message: Message, args: string[], settings: Settings, client: Warspite): Promise<any>;
+    public abstract async run(message: Message, args: string[], settings: Settings, client: GrafSpee): Promise<any>;
 }

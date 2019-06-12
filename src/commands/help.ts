@@ -1,5 +1,5 @@
 import Command from "../utils/Command";
-import Warspite from "../utils/WarspiteClient";
+import GrafSpee from "../utils/GrafSpeeClient";
 import { Message } from "eris";
 import { Settings } from "../utils/Interfaces";
 import { capitalize } from "../utils/Helpers";
@@ -12,12 +12,12 @@ export default class Help extends Command {
         });
     }
 
-    public async run(message: Message, args: string[], settings: Settings, warspite: Warspite) {
+    public async run(message: Message, args: string[], settings: Settings, client: GrafSpee) {
         try {
             if (args.length === 0) {
                 let messageQueue: string[] = [];
-                let currentMessage = `\n# Here's a list of my commands. For more info do: ${warspite.prefix}help <command>\n# Prefix: ${warspite.prefix}\n`;
-                warspite.commands.forEach((command) => {
+                let currentMessage = `\n# Here's a list of my commands. For more info do: ${client.prefix}help <command>\n# Prefix: ${client.prefix}\n`;
+                client.commands.forEach((command) => {
                     if (command.options.hidden === true) return; // Command is hidden
                     if (command.options.ownerOnly && message.author.id !== settings.owner) return; // Command can only be viewed by the owner
 
@@ -31,7 +31,7 @@ export default class Help extends Command {
                 });
                 messageQueue.push(currentMessage);
                 message.channel.addMessageReaction(message.id, "✅");
-                const dm = await warspite.getDMChannel(message.author.id);
+                const dm = await client.getDMChannel(message.author.id);
                 let sendInOrder = setInterval(async () => {
                     if (messageQueue.length > 0) {
                         await dm.createMessage(`\`\`\`py${messageQueue.shift()}\`\`\``); // If still messages queued send the next one.
@@ -40,7 +40,7 @@ export default class Help extends Command {
                     }
                 }, 300);
             } else {
-                const command = this.checkForMatch(args[0], warspite);
+                const command = this.checkForMatch(args[0], client);
                 if (!command) return await message.channel.createMessage(`No command found with the name or alias \`${args[0]}\``);
                 if (command.options.hidden === true) return; // Command is hidden
                 if (command.options.ownerOnly && message.author.id !== settings.owner)
@@ -51,7 +51,7 @@ export default class Help extends Command {
                     `[${capitalize(command.name)}]\n\n` +
                     `= ${command.options.description} =\n\n` +
                     `Aliases            ::  ${command.options.aliases!.join(", ")}\n` +
-                    `Usage              ::  ${warspite.prefix}${command.options.usage}\n` +
+                    `Usage              ::  ${client.prefix}${command.options.usage}\n` +
                     `Guild Only         ::  ${command.options.guildOnly ? "yes" : "no"}\n` +
                     `Owner Only         ::  ${command.options.ownerOnly ? "yes" : "no"}\n` +
                     `Required Args      ::  ${command.options.requiredArgs}\n\n` +
@@ -71,14 +71,14 @@ export default class Help extends Command {
                     }
                 }
             }).catch(() => null);
-            warspite.logger.error("COMMAND:HELP", error.message ? error.message : error.toString());
+            client.logger.error("COMMAND:HELP", error.message ? error.message : error.toString());
         }
     }
 
-    checkForMatch(name: string, warspite: Warspite): Command | undefined {
-        if (name.startsWith(warspite.prefix)) {
+    checkForMatch(name: string, client: GrafSpee): Command | undefined {
+        if (name.startsWith(client.prefix)) {
             name = name.substr(1);
         }
-        return warspite.commands.find((cmd) => cmd.name === name || (cmd.options.aliases !== undefined && cmd.options.aliases.indexOf(name) !== -1));
+        return client.commands.find((cmd) => cmd.name === name || (cmd.options.aliases !== undefined && cmd.options.aliases.indexOf(name) !== -1));
     }
 }

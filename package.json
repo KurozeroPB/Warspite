@@ -1,55 +1,55 @@
 {
-  "name": "warspite",
-  "version": "1.1.0",
-  "description": "Get information about azur lane ships and more related to azur lane directly in discord",
-  "main": "build/src/warspite.js",
-  "engines": {
-    "node": ">=10.x",
-    "yarn": ">=1.15.2"
-  },
-  "homepage": "https://github.com/KurozeroPB/Warspite#readme",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/KurozeroPB/Warspite.git"
-  },
-  "bugs": {
-    "email": "bugs@kurozeropb.info",
-    "url": "https://github.com/KurozeroPB/Warspite/issues"
-  },
-  "author": {
-    "email": "root@kurozeropb.info",
-    "name": "KurozeroPB",
-    "url": "https://kurozeropb.info"
-  },
-  "license": "MIT",
-  "private": false,
-  "scripts": {
-    "deploy": "pm2 start ecosystem.config.js --env production",
-    "start": "cross-env NODE_ENV=production node build/src/warspite.js",
-    "dev": "cross-env NODE_ENV=development node build/src/warspite.js",
-    "test": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/warspite.ts",
-    "pretest": "yarn check",
-    "compile": "yarn check && yarn clean && tsc -p .",
-    "check": "gts check",
-    "clean": "gts clean",
-    "fix": "gts fix"
-  },
-  "dependencies": {
-    "azurlane": "^0.0.7",
-    "bufferutil": "^4.0.1",
-    "chalk": "^2.4.2",
-    "cross-env": "^5.2.0",
-    "eris": "abalabahaha/eris#dev",
-    "erlpack": "abalabahaha/erlpack",
-    "moment": "^2.24.0",
-    "winston": "^3.2.1",
-    "zlib-sync": "^0.1.4"
-  },
-  "devDependencies": {
-    "@types/node": "^11.12.2",
-    "gts": "^0.9.0",
-    "ts-node": "^8.0.3",
-    "tsconfig-paths": "^3.8.0",
-    "typescript": "^3.4.1"
-  }
+    "name": "graf-spee",
+    "version": "1.2.0",
+    "description": "Get information about azur lane ships and more related to azur lane directly in discord",
+    "main": "build/src/index.js",
+    "engines": {
+        "node": ">=8.0.0 <11.0.0",
+        "yarn": ">=1.16.0"
+    },
+    "homepage": "https://github.com/KurozeroPB/graf-spee#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/KurozeroPB/graf-spee.git"
+    },
+    "bugs": {
+        "email": "bugs@kurozeropb.info",
+        "url": "https://github.com/KurozeroPB/graf-spee/issues"
+    },
+    "author": {
+        "email": "root@kurozeropb.info",
+        "name": "KurozeroPB",
+        "url": "https://kurozeropb.info"
+    },
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "deploy": "pm2 start ecosystem.config.js --env production",
+        "start": "cross-env NODE_ENV=production node build/src/index.js",
+        "dev": "cross-env NODE_ENV=development node build/src/index.js",
+        "test": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/index.ts",
+        "pretest": "yarn check",
+        "compile": "yarn check && yarn clean && tsc -p .",
+        "check": "gts check",
+        "clean": "gts clean",
+        "fix": "gts fix"
+    },
+    "dependencies": {
+        "azurlane": "^0.0.8",
+        "bufferutil": "^4.0.1",
+        "chalk": "^2.4.2",
+        "cross-env": "^5.2.0",
+        "eris": "0.10.0",
+        "erlpack": "abalabahaha/erlpack",
+        "moment": "^2.24.0",
+        "winston": "^3.2.1",
+        "zlib-sync": "^0.1.4"
+    },
+    "devDependencies": {
+        "@types/node": "^12.0.8",
+        "gts": "^1.0.0",
+        "ts-node": "^8.2.0",
+        "tsconfig-paths": "^3.8.0",
+        "typescript": "^3.5.1"
+    }
 }

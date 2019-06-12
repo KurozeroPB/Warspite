@@ -1,5 +1,5 @@
 import Command from "../utils/Command";
-import Warspite from "../utils/WarspiteClient";
+import GrafSpee from "../utils/GrafSpeeClient";
 import { Message } from "eris";
 import { Settings } from "../utils/Interfaces";
 
@@ -12,7 +12,7 @@ export default class Ping extends Command {
         })
     }
 
-    public async run(message: Message, _args: string[], settings: Settings, { logger }: Warspite) {
+    public async run(message: Message, _args: string[], settings: Settings, { logger }: GrafSpee) {
         try {
             await message.channel.createMessage("Pong!");
         } catch (error) {

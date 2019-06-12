@@ -1,4 +1,4 @@
-import Warspite from "./WarspiteClient";
+import GrafSpee from "./GrafSpeeClient";
 
 interface Tokens {
     production: string;
@@ -28,7 +28,7 @@ export interface Settings {
 
 export interface HandlerOptions {
     settings: Settings;
-    warspite: Warspite;
+    client: GrafSpee;
 }
 
 export interface CommandOptions {

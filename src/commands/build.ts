@@ -1,5 +1,5 @@
 import Command from "../utils/Command";
-import Warspite from "../utils/WarspiteClient";
+import GrafSpee from "../utils/GrafSpeeClient";
 import { Message } from "eris";
 import { Settings } from "../utils/Interfaces";
 
@@ -13,7 +13,7 @@ export default class Build extends Command {
         })
     }
 
-    public async run(message: Message, args: string[], settings: Settings, { azurlane, logger }: Warspite): Promise<void> {
+    public async run(message: Message, args: string[], settings: Settings, { azurlane, logger }: GrafSpee): Promise<void> {
         let time = args.join("");
         if (time.length === 6) {
             time = time.match(/.{1,2}/gui)!.join(":");

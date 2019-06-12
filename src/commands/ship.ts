@@ -1,5 +1,5 @@
 import Command from "../utils/Command";
-import Warspite from "../utils/WarspiteClient";
+import GrafSpee from "../utils/GrafSpeeClient";
 import { Settings } from "../utils/Interfaces";
 import { Message, PrivateChannel } from "eris";
 
@@ -13,7 +13,7 @@ export default class Ship extends Command {
         });
     }
 
-    public async run(message: Message, args: string[], settings: Settings, client: Warspite) {
+    public async run(message: Message, args: string[], settings: Settings, client: GrafSpee) {
         const name = args.join(" ");
         try {
             const data = await client.azurlane.ship(name);

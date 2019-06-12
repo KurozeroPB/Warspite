@@ -1,4 +1,4 @@
-import Warspite from "./WarspiteClient";
+import GrafSpee from "./GrafSpeeClient";
 import { promises as fs } from "fs";
 import { Settings, HandlerOptions } from "./Interfaces";
 import { GuildChannel, Message } from "eris";
@@ -6,7 +6,7 @@ import Command from "./Command";
 
 export default class CommandHandler {
     public settings: Settings;
-    public warspite: Warspite;
+    public client: GrafSpee;
 
     /**
      * Command handler constructor
@@ -15,7 +15,7 @@ export default class CommandHandler {
      */
     public constructor(options: HandlerOptions) {
         this.settings = options.settings;
-        this.warspite = options.warspite;
+        this.client = options.client;
     }
 
     /**
@@ -28,10 +28,10 @@ export default class CommandHandler {
      */
     public async handleCommand(message: Message, dm: boolean): Promise<boolean> {
         const parts = message.content.split(" ");
-        const name = parts[0].slice(this.warspite.prefix.length);
+        const name = parts[0].slice(this.client.prefix.length);
         const args = parts.splice(1);
 
-        const command = this.warspite.commands.find((cmd) => cmd.name === name || (cmd.options.aliases !== undefined && cmd.options.aliases.indexOf(name) !== -1));
+        const command = this.client.commands.find((cmd) => cmd.name === name || (cmd.options.aliases !== undefined && cmd.options.aliases.indexOf(name) !== -1));
         if (!command) return false; // Command doesn't exist
 
         if (command.options.guildOnly && dm) {
@@ -46,13 +46,13 @@ export default class CommandHandler {
 
         const requiredArgs = command.options.requiredArgs;
         if (requiredArgs !== undefined && requiredArgs > args.length) {
-            await message.channel.createMessage(`Invalid argument count, check \`${this.warspite.prefix}help ${command.name}\` to see how this command works.`);
+            await message.channel.createMessage(`Invalid argument count, check \`${this.client.prefix}help ${command.name}\` to see how this command works.`);
             return false;
         }
 
         if (!dm && message.channel.type === 0) {
             const channel = message.channel as GuildChannel;
-            const member = channel.guild.members.get(this.warspite.user.id);
+            const member = channel.guild.members.get(this.client.user.id);
             if (!member) return false;
 
             let missingPermissions: string[] = [];
@@ -70,7 +70,7 @@ export default class CommandHandler {
         }
 
         try {
-            await command.run(message, args, this.settings, this.warspite);
+            await command.run(message, args, this.settings, this.client);
             return true;
         } catch (error) {
             message.channel.createMessage({
@@ -110,13 +110,13 @@ export default class CommandHandler {
             const cmd = await import(commandPath);
             const command: Command = new cmd.default();
 
-            if (this.warspite.commands.has(command.name)) {
-                this.warspite.logger.warn("CommandHandler", `A command with the name ${command.name} already exists and has been skipped`);
+            if (this.client.commands.has(command.name)) {
+                this.client.logger.warn("CommandHandler", `A command with the name ${command.name} already exists and has been skipped`);
             } else {
-                this.warspite.commands.set(command.name, command);
+                this.client.commands.set(command.name, command);
             }
         } catch (e) {
-            this.warspite.logger.warn("CommandHandler", `${commandPath} - ${e.stack ? e.stack : e.toString()}`);
+            this.client.logger.warn("CommandHandler", `${commandPath} - ${e.stack ? e.stack : e.toString()}`);
         }
     }
 }

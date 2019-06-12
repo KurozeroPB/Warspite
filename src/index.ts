@@ -1,4 +1,4 @@
-import Warspite from "./utils/WarspiteClient";
+import GrafSpee from "./utils/GrafSpeeClient";
 import CommandHandler from "./utils/CommandHandler";
 import settings from "../settings";
 import { Message, TextChannel } from "eris";
@@ -6,23 +6,23 @@ import { sleep } from "./utils/Helpers";
 
 let ready = false;
 
-const warspite = new Warspite(settings.env === "production" ? settings.tokens.production : settings.tokens.development, {
+const client = new GrafSpee(settings.env === "production" ? settings.tokens.production : settings.tokens.development, {
     getAllUsers: true,
     defaultImageFormat: "png",
     defaultImageSize: 1024
 });
-const commandHandler = new CommandHandler({ settings, warspite });
-const logger = warspite.logger;
+const commandHandler = new CommandHandler({ settings, client });
+const logger = client.logger;
 const urlRegex = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gui;
 
-warspite.on("messageCreate", async (message: Message) => {
+client.on("messageCreate", async (message: Message) => {
     if (!ready) return; // Bot is not ready yet
     if (!message.author) return; // System message
     if (message.author.discriminator === "0000") return; // Webhook message
 
-    if (message.content.startsWith(warspite.prefix)) {
+    if (message.content.startsWith(client.prefix)) {
         try {
-            if (message.channel.type === 1 && message.author.id !== warspite.user.id) {
+            if (message.channel.type === 1 && message.author.id !== client.user.id) {
                 await commandHandler.handleCommand(message, true);
             } else if (message.channel.type !== 1) {
                 await commandHandler.handleCommand(message, false);
@@ -43,7 +43,7 @@ warspite.on("messageCreate", async (message: Message) => {
 });
 
 /* Specific for my own guild */
-warspite.on("guildMemberAdd", async (guild, member) => {
+client.on("guildMemberAdd", async (guild, member) => {
     try {
         if (guild.id === "240059867744698368") {
             const hasUrlUsername = member.username.match(urlRegex);
@@ -70,14 +70,14 @@ warspite.on("guildMemberAdd", async (guild, member) => {
     }
 });
 
-warspite.on("ready", async () => {
+client.on("ready", async () => {
     if (!ready) {
         await commandHandler.loadCommands(`${__dirname}/commands`);
 
-        logger.ready(`Logged in as ${warspite.user.username}`);
-        logger.ready(`Loaded [${warspite.commands.size}] commands`);
+        logger.ready(`Logged in as ${client.user.username}`);
+        logger.ready(`Loaded [${client.commands.size}] commands`);
 
-        warspite.editStatus("online", { name: "Azur Lane", type: 0 });
+        client.editStatus("online", { name: "Azur Lane", type: 0 });
 
         ready = true;
     }
@@ -87,16 +87,16 @@ warspite.on("ready", async () => {
  * Sometimes when a shard goes down for a moment and comes back up is loses it's status
  * so we re-add it here
  */
-warspite.on("shardResume", (id: number) => {
-    const shard = warspite.shards.get(id);
+client.on("shardResume", (id: number) => {
+    const shard = client.shards.get(id);
     if (shard) {
         shard.editStatus("online", { name: "Azur Lane", type: 0 });
     }
 });
 
 process.on("SIGINT", () => {
-    warspite.disconnect({ reconnect: false });
+    client.disconnect({ reconnect: false });
     process.exit(0);
 });
 
-warspite.connect().catch((e) => logger.error("CONNECT", e));
+client.connect().catch((e) => logger.error("CONNECT", e));

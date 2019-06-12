@@ -5,7 +5,7 @@ import Collection from "./Collection";
 import settings from "../../settings";
 import { Client, ClientOptions, Guild } from "eris";
 
-export default class Warspite extends Client {
+export default class GrafSpee extends Client {
     public commands: Collection<Command> = new Collection();
     public logger: Logger;
     public prefix: string;

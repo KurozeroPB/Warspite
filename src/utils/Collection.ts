@@ -1,3 +1,5 @@
+// TODO: Use @kurozero/collection instead
+
 export default class Collection<T> extends Map<string | number, T> {
 
     /** Returns first matching Object or undefined if no match */
