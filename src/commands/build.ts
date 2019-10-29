@@ -20,7 +20,7 @@ export default class Build extends Command {
         }
 
         try {
-            const data = await azurlane.buildInfo(time);
+            const data = await azurlane.getBuildInfo(time);
             await message.channel.createMessage(`All ships for the construction time **${data.time}**:\n${data.ships.join(", ")}`);
         } catch (error) {
             message.channel.createMessage({

@@ -16,10 +16,10 @@ export default class Ship extends Command {
     public async run(message: Message, args: string[], settings: Settings, client: GrafSpee) {
         const name = args.join(" ");
         try {
-            const data = await client.azurlane.ship(name);
+            const data = await client.azurlane.getShipByName(name);
             await message.channel.createMessage({
                 embed: {
-                    title: data.names.full || "Unkown",
+                    title: data.names.en || "Unkown",
                     color: client.embedColor((message.channel instanceof PrivateChannel) ? undefined : message.channel.guild),
                     thumbnail: { url: data.thumbnail },
                     fields: [
