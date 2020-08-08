@@ -1,7 +1,8 @@
 import Command from "../utils/Command";
 import GrafSpee from "../utils/GrafSpeeClient";
 import { Settings } from "../utils/Interfaces";
-import { Message, PrivateChannel } from "eris";
+import { Message } from "eris";
+import { isGuildChannel } from "../utils/Helpers";
 
 export default class Ship extends Command {
     public constructor() {
@@ -20,7 +21,7 @@ export default class Ship extends Command {
             await message.channel.createMessage({
                 embed: {
                     title: data.names.en || "Unkown",
-                    color: client.embedColor((message.channel instanceof PrivateChannel) ? undefined : message.channel.guild),
+                    color: client.embedColor(isGuildChannel(message.channel) ? message.channel.guild : undefined),
                     thumbnail: { url: data.thumbnail },
                     fields: [
                         { name: "Construction time", value: data.buildTime || "Unkown", inline: true },

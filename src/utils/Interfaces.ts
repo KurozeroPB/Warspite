@@ -3,6 +3,7 @@ import GrafSpee from "./GrafSpeeClient";
 interface Tokens {
     production: string;
     development: string;
+    azurlane: string;
 }
 
 interface Prefix {

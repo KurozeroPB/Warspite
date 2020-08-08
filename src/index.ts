@@ -1,10 +1,13 @@
 import GrafSpee from "./utils/GrafSpeeClient";
 import CommandHandler from "./utils/CommandHandler";
 import settings from "../settings";
+import Yukikaze from "yukikaze";
 import { Message, TextChannel } from "eris";
 import { sleep } from "./utils/Helpers";
 
 let ready = false;
+
+const interval = new Yukikaze();
 
 const client = new GrafSpee(settings.env === "production" ? settings.tokens.production : settings.tokens.development, {
     getAllUsers: true,
@@ -14,6 +17,18 @@ const client = new GrafSpee(settings.env === "production" ? settings.tokens.prod
 const commandHandler = new CommandHandler({ settings, client });
 const logger = client.logger;
 const urlRegex = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gui;
+
+function updateMemberCount() {
+    const guild = client.guilds.get("240059867744698368");
+    if (guild) {
+        const channel = guild.channels.get("741461211526463510");
+        if (channel) {
+            channel.edit({
+                name: `members: ${guild.memberCount}`
+            });
+        }
+    }
+}
 
 client.on("messageCreate", async (message: Message) => {
     if (!ready) return; // Bot is not ready yet
@@ -78,6 +93,9 @@ client.on("ready", async () => {
         logger.ready(`Loaded [${client.commands.size}] commands`);
 
         client.editStatus("online", { name: "Azur Lane", type: 0 });
+
+        updateMemberCount();
+        interval.run(() => updateMemberCount(), 15 * 60 * 1000);
 
         ready = true;
     }

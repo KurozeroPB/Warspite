@@ -9,7 +9,10 @@ export default class GrafSpee extends Client {
     public commands: Collection<Command> = new Collection();
     public logger: Logger;
     public prefix: string;
-    public azurlane: AzurLane = new AzurLane();
+    public azurlane: AzurLane = new AzurLane({
+        userAgent: `GrafSpee/${settings.version}`,
+        token: settings.tokens.azurlane
+    });
 
     public constructor(token: string, options?: ClientOptions) {
         super(token, options);

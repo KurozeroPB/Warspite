@@ -1,25 +1,25 @@
 {
     "name": "graf-spee",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Get information about azur lane ships and more related to azur lane directly in discord",
     "main": "build/src/index.js",
     "engines": {
-        "node": ">=8.0.0 <11.0.0",
-        "yarn": ">=1.16.0"
+        "node": ">=14",
+        "yarn": ">=1.22.4"
     },
-    "homepage": "https://github.com/KurozeroPB/graf-spee#readme",
+    "homepage": "https://github.com/Pepijn98/graf-spee#readme",
     "repository": {
         "type": "git",
-        "url": "https://github.com/KurozeroPB/graf-spee.git"
+        "url": "https://github.com/Pepijn98/graf-spee.git"
     },
     "bugs": {
-        "email": "bugs@kurozeropb.info",
-        "url": "https://github.com/KurozeroPB/graf-spee/issues"
+        "email": "pepijn@vdbroek.dev",
+        "url": "https://github.com/Pepijn98/graf-spee/issues"
     },
     "author": {
-        "email": "root@kurozeropb.info",
-        "name": "KurozeroPB",
-        "url": "https://kurozeropb.info"
+        "email": "pepijn@vdbroek.dev",
+        "name": "Pepijn van den Broek",
+        "url": "https://vdbroek.dev"
     },
     "license": "MIT",
     "private": false,
@@ -29,27 +29,28 @@
         "dev": "cross-env NODE_ENV=development node build/src/index.js",
         "test": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/index.ts",
         "pretest": "yarn check",
-        "compile": "yarn check && yarn clean && tsc -p .",
-        "check": "gts check",
-        "clean": "gts clean",
-        "fix": "gts fix"
+        "compile": "yarn clean:build && tsc -p .",
+        "fix": "gts fix",
+        "clean:build": "rm -rf ./build",
+        "clean": "rm -rf ./node_modules && rm ./yarn.lock"
     },
     "dependencies": {
-        "azurlane": "^1.0.0",
+        "azurlane": "^1.6.0",
         "bufferutil": "^4.0.1",
-        "chalk": "^2.4.2",
-        "cross-env": "^6.0.3",
-        "eris": "0.11.0",
+        "chalk": "^4.1.0",
+        "cross-env": "^7.0.2",
+        "eris": "0.13.3",
         "erlpack": "abalabahaha/erlpack",
-        "moment": "^2.24.0",
-        "winston": "^3.2.1",
-        "zlib-sync": "^0.1.5"
+        "moment": "^2.27.0",
+        "typescript": "^3.9.7",
+        "winston": "^3.3.3",
+        "yukikaze": "^0.3.0",
+        "zlib-sync": "^0.1.7"
     },
     "devDependencies": {
-        "@types/node": "^12.11.7",
-        "gts": "^1.1.0",
-        "ts-node": "^8.4.1",
-        "tsconfig-paths": "^3.9.0",
-        "typescript": "^3.6.4"
+        "@types/node": "^14.0.27",
+        "gts": "^2.0.2",
+        "ts-node": "^8.10.2",
+        "tsconfig-paths": "^3.9.0"
     }
 }
