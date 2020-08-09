@@ -2246,11 +2246,6 @@ yn@3.1.1:
   resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
-yukikaze@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/yukikaze/-/yukikaze-0.3.0.tgz#521db434618b2a9c36ac0088398bdd7a8742fb55"
-  integrity sha512-Y+bhWIZmnN2/KO8xuewMDuPYT47NBvw4cbF9OUCPRz71gY0yGL53KqvBF371eONjlDgaYU0ucTt++2BmLVvwxw==
-
 zlib-sync@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/zlib-sync/-/zlib-sync-0.1.7.tgz#b0b24f9428e434943e306ad586428ef8baf3ed60"

@@ -44,7 +44,6 @@
         "moment": "^2.27.0",
         "typescript": "^3.9.7",
         "winston": "^3.3.3",
-        "yukikaze": "^0.3.0",
         "zlib-sync": "^0.1.7"
     },
     "devDependencies": {

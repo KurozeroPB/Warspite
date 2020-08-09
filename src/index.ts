@@ -1,13 +1,10 @@
 import GrafSpee from "./utils/GrafSpeeClient";
 import CommandHandler from "./utils/CommandHandler";
 import settings from "../settings";
-import Yukikaze from "yukikaze";
-import { Message, TextChannel } from "eris";
+import { Message, TextChannel, Guild } from "eris";
 import { sleep } from "./utils/Helpers";
 
 let ready = false;
-
-const interval = new Yukikaze();
 
 const client = new GrafSpee(settings.env === "production" ? settings.tokens.production : settings.tokens.development, {
     getAllUsers: true,
@@ -18,15 +15,12 @@ const commandHandler = new CommandHandler({ settings, client });
 const logger = client.logger;
 const urlRegex = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gui;
 
-function updateMemberCount() {
-    const guild = client.guilds.get("240059867744698368");
-    if (guild) {
-        const channel = guild.channels.get("741461211526463510");
-        if (channel) {
-            channel.edit({
-                name: `members: ${guild.memberCount}`
-            });
-        }
+function updateMemberCount(guild: Guild) {
+    const channel = guild.channels.get("741461211526463510");
+    if (channel) {
+        channel.edit({
+            name: `members: ${guild.memberCount}`
+        });
     }
 }
 
@@ -60,7 +54,7 @@ client.on("messageCreate", async (message: Message) => {
 /* Specific for my own guild */
 client.on("guildMemberAdd", async (guild, member) => {
     try {
-        if (guild.id === "240059867744698368") {
+        if (guild.id === settings.guild) {
             const hasUrlUsername = member.username.match(urlRegex);
             if (hasUrlUsername) {
                 await member.ban(7, "[auto detected] Advertisement in username");
@@ -77,11 +71,18 @@ client.on("guildMemberAdd", async (guild, member) => {
                     }
                 }
             } else {
+                updateMemberCount(guild)
                 await member.addRole("304266397947789322", "New member");
             }
         }
     } catch (e) {
         logger.error("guildMemberAdd", "Oopsie an error was thrown, but who gives a shit.");
+    }
+});
+
+client.on("guildMemberRemove", (guild) => {
+    if (guild.id === settings.guild) {
+        updateMemberCount(guild)
     }
 });
 
@@ -94,8 +95,10 @@ client.on("ready", async () => {
 
         client.editStatus("online", { name: "Azur Lane", type: 0 });
 
-        updateMemberCount();
-        interval.run(() => updateMemberCount(), 15 * 60 * 1000);
+        const guild = client.guilds.get(settings.guild);
+        if (guild) {
+            updateMemberCount(guild);
+        }
 
         ready = true;
     }

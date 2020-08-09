@@ -21,6 +21,7 @@ export interface Settings {
     env: string,
     tokens: Tokens;
     owner: string;
+    guild: string;
     prefix: Prefix;
     baseUrl: string;
     colors: Colors;
