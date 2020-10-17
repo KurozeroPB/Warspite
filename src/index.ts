@@ -19,7 +19,7 @@ function updateMemberCount(guild: Guild) {
     const channel = guild.channels.get("741461211526463510");
     if (channel) {
         channel.edit({
-            name: `members: ${guild.memberCount}`
+            name: `Members - ${guild.memberCount} 🐺`
         });
     }
 }
